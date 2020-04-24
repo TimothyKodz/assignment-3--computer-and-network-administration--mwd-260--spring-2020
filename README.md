@@ -16,42 +16,93 @@ ssh roy@user-bauhaus.cs.hartford.edu
 Write a script that recursively copies all the files in one folder to another folder. The names of both folders should be arguments to the script. (_`12` pts_)
 
 ```
+#If the arguments are the full paths to the directories, this can be acomplished in only one command
+cp -r "${1}/." ${2}
+
+#If the arguments are only the basenames of the directories
+#!/bin/bash
+
+copy_from="$(find /home/$USER/ -type d -name "$1" | head -1)"
+copy_to="$(find /home/$USER/ -type d -name "$2" | head -1)"
+
+cp -r "${copy_from}/." ${copy_to}
+
+exit 0
 ```
 
 ### Question 2
 Write a script that checks whether a program exists on your machine. If it doesn’t, it should try to fetch the program via `apt install`. (_`12` pts_)
 
 ```
+#!/bin/bash
+
+if [ $(which $1) ];
+then
+    echo "$1 is already installed on your machine"
+    
+    exit 0
+fi
+
+echo "$1 is not installed on your machine"
+echo "attempting to install $1"
+
+sudo apt install "$1"
+
+exit 0
 ```
 
 ### Question 3
 Write a command that will create an empty file with a `.txt` extension named after the current folder. (_`12` pts_)
 
 ```
+touch "$(basename "$PWD").txt"
 ```
 
 ### Question 4
 Write a command that will recursively remove files with the `.thumbs` extension from the current folder. (_`12` pts_)
 
 ```
+rm -r *.thumbs
 ```
 
 ### Question 5
 Write a command that will recursively remove empty folders from the current folder. (_`12` pts_)
 
 ```
+find . -type d -empty -delete
 ```
 
 ### Question 6
 Write a script that reports every file name in a folder as two items: the filename and its extension. Each item should appear on a new line. (_`12` pts_)
 
 ```
+#!/bin/bash
+
+folder="$(ls $1)" #Where the user is inputing the path to the directory they wish to target as an argument
+
+for file in ${folder};
+do
+    echo "${file%.*}"
+    echo "${file##*.}"
+done
+
+exit 0
 ```
 
 ### Question 7
 Write a script that requests the user answer `y` or `n` to a prompt, and only exits when either of the two responses is entered. The user’s response should be echoed to the screen _before_ the program exits. (_`28` pts_)
 
 ```
+#!/bin/bash
+
+echo "Please respond either 'y' or 'n' to the following question
+echo "Is today a weekday?"
+
+read answer
+
+echo "You responded $answer"
+
+exit 0
 ```
 
 ## ❖・Due・❖
